@@ -20,23 +20,42 @@ export const CreateAccount = () => {
 
   const clearState = () => setFormData({ ...initialState });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-
-    // Replace below with your own EmailJS Service ID, Template ID, and Public Key
-    emailjs
-      .sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", e.target, "YOUR_PUBLIC_KEY")
-      .then(
-        (result) => {
-          console.log(result.text);
-          clearState();
+  
+    // Log the form data as a string
+    const formDataString = JSON.stringify(formData);
+  
+    // Send the form data to the Flask API (POST request)
+    try {
+      const response = await fetch("http://localhost:5000/create_account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        (error) => {
-          console.log(error.text);
-        }
-      );
+        body: formDataString,
+      });
+  
+      const result = await response.json();
+      console.log("Account creation response:", result);
+  
+      // Clear form state
+      clearState();
+    } catch (error) {
+      console.error("Error submitting the form:", error);
+    }
   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+    
+//     // Log the form data as a string
+//     const formDataString = JSON.stringify(formData);
+//     //console.log(formDataString);
+    
+//     // Clear form state
+//     clearState();
+//   };
 
   return (
     <div>
