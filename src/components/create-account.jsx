@@ -107,26 +107,6 @@ export const CreateAccount = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    id="dietaryPreferences"
-                    name="dietaryPreferences"
-                    className="form-control"
-                    placeholder="Dietary Preferences (e.g., Vegan, Keto)"
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    id="allergies"
-                    name="allergies"
-                    className="form-control"
-                    placeholder="Allergies (e.g., Nuts, Dairy)"
-                    onChange={handleChange}
-                  />
-                </div>
                 <button type="submit" className="btn btn-custom btn-lg">
                   Create Account
                 </button>
@@ -141,8 +121,6 @@ export const CreateAccount = () => {
 
 
 
-// import { useState } from "react";
-// import emailjs from "emailjs-com";
 // import React from "react";
 
 // const initialState = {
