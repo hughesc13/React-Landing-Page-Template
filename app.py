@@ -38,37 +38,6 @@ def create_account():
     session.commit()
     return jsonify({'message': 'User created'}), 201
 
-# @app.route('/create_account', methods=['POST'])
-# def create_account():
-#     data = request.get_json()
-
-#     # Extract form data
-#     name = data['name']
-#     email = data['email']
-#     password = data['password']
-
-
-#     new_user = User(
-#         name=name,
-#         email=email,
-#         password=password
-#     )
-
-
-#     print("we've made new user, and have not entered try block")
-#     try:
-#         session.add(new_user)
-#         session.commit()
-#         return jsonify({'message': 'Account created successfully'}), 201
-
-#     except Exception as e:
-#         session.rollback()  # Rollback the transaction
-#         app.logger.error(f"Error during commit: {e}")
-#         return 'There was an issue adding your task'
-
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

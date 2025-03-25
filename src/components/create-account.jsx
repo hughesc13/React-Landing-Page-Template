@@ -25,14 +25,15 @@ export const CreateAccount = () => {
   
     // Log the form data as a string
     const formDataString = JSON.stringify(formData);
+    console.log(formDataString);//yay it printed
   
     // Send the form data to the Flask API (POST request)
     try {
-      const response = await fetch("http://localhost:5000/create_account", {
+      const response = await fetch("http://localhost:3000/create_account", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
         body: formDataString,
       });
   
