@@ -1,43 +1,46 @@
-from flask import Flask, request, jsonify
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, render_template, request, redirect, url_for, session
 
-import logging
-
-from user_model import Base, User
-logging.basicConfig()
-logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
-
-order_number = 0
+from repositories import db_repo
 
 app = Flask(__name__)
-app.secret_key = "this is a secret key"
+app.secret_key = "fdsafsdafadf"
 
-engine = create_engine("sqlite:///users.db", echo=True)
-Base.metadata.create_all(bind=engine)
-Session = sessionmaker(bind=engine)
-session = Session()
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+@app.post('/signup')
+def signup():
+    name = request.form['username']
+    password = request.form['password']
+    db_repo.signup_user(name, password)
+    return redirect(url_for('login_page'))
 
-def set_password(self, password):
-    self.password = generate_password_hash(password)
+@app.route('/home')
+def home():
+    name = session.get('name', None)
+    if name == None:
+        return redirect(url_for('index'))
+    return render_template('main.html', username=name)
 
-def check_password(self, password):
-    return check_password_hash(self.password, password)
+@app.route('/login_page')
+def login_page():
+    return render_template('login.html')
 
+@app.post('/login')
+def login():
+    name = request.form['username']
+    password = request.form['password']
+    login, id, name = db_repo.login_user(name, password)
+    if login == False:
+        return redirect(url_for('login_page'))
+    else:
+        session['id'] = id
+        session['name'] = name
+        return redirect(url_for('home'))
 
-@app.route('/create_account', methods=['POST'])
-def create_account():
-    data = request.json
-    hashed_password = generate_password_hash(data['password']).decode('utf-8')
-    new_user = User(username=data['username'], password=hashed_password)
-    session.add(new_user)
-    session.commit()
-    return jsonify({'message': 'User created'}), 201
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/logout')
+def logout():
+    for key in list(session.keys()):
+        session.pop(key)
+    return redirect(url_for('index'))
